@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM python:3.7-alpine
 # env
 ENV APP_DIR=/usr/src/app
 ENV FLASK_APP=${APP_DIR}/app.py

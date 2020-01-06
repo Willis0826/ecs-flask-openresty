@@ -1,15 +1,40 @@
 version: v1.0
-name: Docker
+name: Docker build and pack
 agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: Build
+  - name: Build and pack
     task:
+      env_vars:
+        - name: AWS_DEFAULT_REGION
+          value: us-east-2
+        - name: ECR_REGISTRY
+          value: 990090895087.dkr.ecr.us-east-2.amazonaws.com/ecs-flask-openresty
+      secrets:
+        - name: AWS
+      prologue:
+        commands:
+          # Install the most up-to-date AWS cli
+          - sudo pip install awscli
+          - checkout
+          # ecr get-login outputs a login command, so execute that with bash
+          - aws ecr get-login --no-include-email | bash
       jobs:
-        - name: docker build
+        - name: Build and pack flask app
           commands:
-            - checkout
-            - docker build -t your-image .
-            - echo "Set up credentials through secret and push to your registry"
+            - cd app
+            - docker build -t tmp .
+            - docker tag tmp "${ECR_REGISTRY}/flask:${SEMAPHORE_GIT_SHA:0:7}"
+            - docker tag tmp "${ECR_REGISTRY}/flask:latest"
+            - docker push "${ECR_REGISTRY}/flask:${SEMAPHORE_GIT_SHA:0:7}"
+            - docker push "${ECR_REGISTRY}/flask:latest"
+        - name: Build and pack openresty
+          commands:
+            - cd nginx
+            - docker build -t tmp .
+            - docker tag tmp "${ECR_REGISTRY}/openresty:${SEMAPHORE_GIT_SHA:0:7}"
+            - docker tag tmp "${ECR_REGISTRY}/openresty:latest"
+            - docker push "${ECR_REGISTRY}/openresty:${SEMAPHORE_GIT_SHA:0:7}"
+            - docker push "${ECR_REGISTRY}/openresty:latest"
