@@ -8,8 +8,6 @@ blocks:
   - name: Build and pack
     task:
       env_vars:
-        - name: AWS_DEFAULT_REGION
-          value: us-east-2
         - name: ECR_REGISTRY
           value: 990090895087.dkr.ecr.us-east-2.amazonaws.com/ecs-flask-openresty
       secrets:
@@ -38,3 +36,13 @@ blocks:
             - docker tag tmp "${ECR_REGISTRY}/openresty:latest"
             - docker push "${ECR_REGISTRY}/openresty:${SEMAPHORE_GIT_SHA:0:7}"
             - docker push "${ECR_REGISTRY}/openresty:latest"
+  - name: Deploy aws resources - dev
+    task:
+      env_vars:
+        - name: DEPLOY_ENV
+          value: dev
+      jobs:
+        - name: "Terraform init and apply"
+          commands:
+            - cd deploy/aws
+            - ./deploy.sh ${SEMAPHORE_GIT_SHA:0:7}
