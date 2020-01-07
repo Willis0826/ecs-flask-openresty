@@ -8,3 +8,4 @@ There are resources needed to be manually create before running CI/CD.
 
 1. ECR `ecs-flask-openresty/flask` and `ecs-flask-openresty/openresty`
 2. S3 `ecs-flask-openresty-tf-states`
+3. EC2 Key Pairs `ecs-flask-cluster`

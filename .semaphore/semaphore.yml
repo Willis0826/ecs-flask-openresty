@@ -4,6 +4,9 @@ agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
+  containers:
+    - name: main
+      image: willischou/gomplate-terraform:0.1
 blocks:
   - name: Build and pack
     task:
@@ -38,11 +41,14 @@ blocks:
             - docker push "${ECR_REGISTRY}/openresty:latest"
   - name: Deploy aws resources - dev
     task:
+      secrets:
+        - name: AWS
       env_vars:
         - name: DEPLOY_ENV
           value: dev
       jobs:
         - name: "Terraform init and apply"
           commands:
+            - checkout
             - cd deploy/aws
             - ./deploy.sh ${SEMAPHORE_GIT_SHA:0:7}
