@@ -17,8 +17,6 @@ blocks:
         - name: AWS
       prologue:
         commands:
-          # Install the most up-to-date AWS cli
-          - sudo pip install awscli
           - checkout
           # ecr get-login outputs a login command, so execute that with bash
           - aws ecr get-login --no-include-email | bash
