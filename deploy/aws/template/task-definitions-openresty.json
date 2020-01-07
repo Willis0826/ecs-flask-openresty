@@ -1,6 +1,6 @@
 [
     {
-        "name": "flask",
+        "name": "openresty",
         "image": "990090895087.dkr.ecr.us-east-2.amazonaws.com/ecs-flask-openresty/openresty:latest",
         "cpu": 10,
         "memory": 256,
@@ -8,7 +8,7 @@
         "portMappings": [
             {
                 "containerPort": 80,
-                "hostPort": 0
+                "hostPort": 80
             }
         ]
     }

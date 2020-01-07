@@ -54,7 +54,7 @@ data "aws_ami" "stable-coreos" {
   owners = ["595879546273"] # CoreOS
 }
 
-data "template_file" "cloud_config" {
+data "template_file" "cloud-config-flask" {
   template = "${file("cloud-config.yaml")}"
 
   vars = {
@@ -106,7 +106,7 @@ resource "aws_launch_configuration" "flask" {
   image_id                    = "${data.aws_ami.stable-coreos.id}"
   instance_type               = "t2.small"
   iam_instance_profile        = "${aws_iam_instance_profile.ecs.name}"
-  user_data                   = "${data.template_file.cloud_config.rendered}"
+  user_data                   = "${data.template_file.cloud-config-flask.rendered}"
   associate_public_ip_address = true
 
   lifecycle {
@@ -152,7 +152,7 @@ resource "aws_ecs_service" "openresty" {
   name            = "openresty"
   cluster         = "${aws_ecs_cluster.openresty.id}"
   task_definition = "${aws_ecs_task_definition.openresty.arn}"
-  desired_count   = 1
+  desired_count   = 0
 
   ordered_placement_strategy {
     type  = "binpack"
@@ -160,14 +160,59 @@ resource "aws_ecs_service" "openresty" {
   }
 
   load_balancer {
-    # target_group_arn = "${aws_alb_target_group.ecs-flask.arn}"
+    elb_name = "${aws_elb.ecs-openresty.name}"
     container_name   = "openresty"
-    container_port   = 5000
+    container_port   = 80
   }
-
-  depends_on = [
-      # "aws_alb_listener.flask",
-  ]
 }
 
 ### compute resources
+data "template_file" "cloud-config-openresty" {
+  template = "${file("cloud-config.yaml")}"
+
+  vars = {
+    aws_region         = "{{.Env.AWS_DEFAULT_REGION}}"
+    ecs_cluster_name   = "${aws_ecs_cluster.openresty.name}"
+    ecs_log_level      = "info"
+    ecs_agent_version  = "latest"
+  }
+}
+
+resource "aws_launch_configuration" "openresty" {
+  security_groups = [
+    "${aws_security_group.openresty-instance-sg.id}",
+  ]
+
+  key_name                    = "ecs-flask-cluster" # FIXME using terraform to create key pair
+  image_id                    = "${data.aws_ami.stable-coreos.id}"
+  instance_type               = "t2.small"
+  iam_instance_profile        = "${aws_iam_instance_profile.ecs.name}"
+  user_data                   = "${data.template_file.cloud-config-openresty.rendered}"
+  associate_public_ip_address = true
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_autoscaling_group" "openresty" {
+  name                 = "openresty"
+  vpc_zone_identifier  = ["${data.aws_subnet.us-east-2a.id}", "${data.aws_subnet.us-east-2b.id}"]
+  min_size             = 1
+  max_size             = 2
+  desired_capacity     = 1
+  launch_configuration = "${aws_launch_configuration.openresty.name}"
+
+  tags = [
+    {
+      key                 = "Name"
+      value               = "ecs-openresty"
+      propagate_at_launch = true
+    },
+    {
+      key                 = "env"
+      value               = "{{.Env.DEPLOY_ENV}}"
+      propagate_at_launch = true
+    },
+  ]
+}

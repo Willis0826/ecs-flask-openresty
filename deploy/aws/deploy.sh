@@ -19,6 +19,8 @@ deploy() {
     cd dist
     # terraform init
     terraform init
+    # terraform plan
+    terraform plan
     # terraform apply -auto-approve -input=false
     terraform apply -auto-approve -input=false
 }
