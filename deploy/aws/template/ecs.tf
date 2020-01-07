@@ -1,5 +1,6 @@
 # flask
 ## ecs cluster
+### ecs resource
 resource "aws_ecs_cluster" "flask" {
   name = "flask"
 }
@@ -30,7 +31,8 @@ resource "aws_ecs_service" "flask" {
       "aws_alb_listener.flask",
   ]
 }
-## compute resources
+
+### compute resources
 data "aws_ami" "stable-coreos" {
   most_recent = true
 
@@ -133,3 +135,39 @@ resource "aws_autoscaling_group" "flask" {
     },
   ]
 }
+
+# openresty
+## openresty cluster
+### ecs resource
+resource "aws_ecs_cluster" "openresty" {
+  name = "openresty"
+}
+
+resource "aws_ecs_task_definition" "openresty" {
+  family                = "openresty"
+  container_definitions = "${file("task-definitions-openresty.json")}"
+}
+
+resource "aws_ecs_service" "openresty" {
+  name            = "openresty"
+  cluster         = "${aws_ecs_cluster.openresty.id}"
+  task_definition = "${aws_ecs_task_definition.openresty.arn}"
+  desired_count   = 1
+
+  ordered_placement_strategy {
+    type  = "binpack"
+    field = "cpu"
+  }
+
+  load_balancer {
+    # target_group_arn = "${aws_alb_target_group.ecs-flask.arn}"
+    container_name   = "openresty"
+    container_port   = 5000
+  }
+
+  depends_on = [
+      # "aws_alb_listener.flask",
+  ]
+}
+
+### compute resources
