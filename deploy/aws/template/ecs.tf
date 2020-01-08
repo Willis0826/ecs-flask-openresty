@@ -200,7 +200,7 @@ resource "aws_autoscaling_group" "openresty" {
   vpc_zone_identifier  = ["${data.aws_subnet.us-east-2a.id}", "${data.aws_subnet.us-east-2b.id}"]
   min_size             = 1
   max_size             = 2
-  desired_capacity     = 1
+  desired_capacity     = 2
   launch_configuration = "${aws_launch_configuration.openresty.name}"
 
   tags = [
