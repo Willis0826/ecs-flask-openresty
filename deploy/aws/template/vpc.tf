@@ -50,6 +50,13 @@ resource "aws_security_group" "openresty-elb-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    protocol    = "tcp"
+    from_port   = 443
+    to_port     = 443
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port = 0
     to_port   = 0
@@ -137,16 +144,15 @@ resource "aws_security_group" "openresty-instance-sg" {
     from_port = 80
     to_port   = 80
 
-    cidr_blocks = [
-      "61.219.173.55/32", // office ip
-      "210.242.90.193/32", // office ip
+    security_groups = [
+      "${aws_security_group.openresty-elb-sg.id}",
     ]
   }
 
   ingress {
     protocol  = "tcp"
-    from_port = 80
-    to_port   = 80
+    from_port = 443
+    to_port   = 443
 
     security_groups = [
       "${aws_security_group.openresty-elb-sg.id}",

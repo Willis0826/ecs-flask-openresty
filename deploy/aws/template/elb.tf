@@ -11,6 +11,13 @@ resource "aws_elb" "ecs-openresty" {
     lb_protocol       = "http"
   }
 
+  listener {
+    instance_port     = 443
+    instance_protocol = "tcp"
+    lb_port           = 443
+    lb_protocol       = "tcp"
+  }
+
   health_check {
     healthy_threshold   = 2
     unhealthy_threshold = 2
