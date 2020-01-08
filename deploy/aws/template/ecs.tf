@@ -183,7 +183,7 @@ resource "aws_launch_configuration" "openresty" {
     "${aws_security_group.openresty-instance-sg.id}",
   ]
 
-  key_name                    = "ecs-flask-cluster" # FIXME using terraform to create key pair
+  key_name                    = "ecs-openresty-cluster" # FIXME using terraform to create key pair
   image_id                    = "${data.aws_ami.stable-coreos.id}"
   instance_type               = "t2.small"
   iam_instance_profile        = "${aws_iam_instance_profile.ecs.name}"
