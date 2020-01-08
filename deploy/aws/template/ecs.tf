@@ -152,7 +152,7 @@ resource "aws_ecs_service" "openresty" {
   name            = "openresty"
   cluster         = "${aws_ecs_cluster.openresty.id}"
   task_definition = "${aws_ecs_task_definition.openresty.arn}"
-  desired_count   = 0
+  desired_count   = 1
 
   ordered_placement_strategy {
     type  = "binpack"
