@@ -6,13 +6,7 @@ RUN apk add --no-cache --virtual .run-deps \
     diffutils \
     grep \
     sed \
-    openssl \
-    && mkdir -p /etc/resty-auto-ssl/storage/file \
-    && addgroup -S nginx \
-    && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
-    && chown nginx /etc/resty-auto-ssl \
-    && chown nginx /etc/resty-auto-ssl/storage \
-    && chown nginx /etc/resty-auto-ssl/storage/file
+    openssl
 
 RUN apk add --no-cache --virtual .build-deps \
         gcc \

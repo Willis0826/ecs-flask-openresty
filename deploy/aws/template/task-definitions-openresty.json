@@ -4,6 +4,7 @@
         "image": "990090895087.dkr.ecr.us-east-2.amazonaws.com/ecs-flask-openresty/openresty:{{.Env.VERSION}}",
         "cpu": 10,
         "memory": 256,
+        "privileged": true,
         "essential": true,
         "portMappings": [
             {
