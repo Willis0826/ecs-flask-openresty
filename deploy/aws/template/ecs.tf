@@ -146,6 +146,10 @@ resource "aws_ecs_cluster" "openresty" {
 resource "aws_ecs_task_definition" "openresty" {
   family                = "openresty"
   container_definitions = "${file("task-definitions-openresty.json")}"
+  volume {
+    name = "logs"
+    host_path = "/home/core/logs"
+  }
 }
 
 resource "aws_ecs_service" "openresty" {

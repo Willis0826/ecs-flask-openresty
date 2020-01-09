@@ -40,7 +40,8 @@ RUN apk add --no-cache --virtual .build-deps \
     && apk del .build-deps \
     && rm -rf /usr/local/openresty/nginx/conf/* \
     && mkdir -p /var/cache/nginx
-
+# logs folder
+RUN mkdir /var/log/nginx
 # use self signed ssl certifacte to start nginx
 COPY ./ssl /etc/ssl
 # copy conf
