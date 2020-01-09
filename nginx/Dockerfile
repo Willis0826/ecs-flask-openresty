@@ -6,7 +6,11 @@ RUN apk add --no-cache --virtual .run-deps \
     diffutils \
     grep \
     sed \
-    openssl
+    openssl \
+    && mkdir -p /etc/resty-auto-ssl \
+    && addgroup -S nginx \
+    && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
+    && chown nginx /etc/resty-auto-ssl
 
 RUN apk add --no-cache --virtual .build-deps \
         gcc \
@@ -36,6 +40,8 @@ RUN apk add --no-cache --virtual .build-deps \
     && apk del .build-deps \
     && rm -rf /usr/local/openresty/nginx/conf/* \
     && mkdir -p /var/cache/nginx
+
+VOLUME /etc/resty-auto-ssl
 # logs folder
 RUN mkdir /var/log/nginx
 # use self signed ssl certifacte to start nginx

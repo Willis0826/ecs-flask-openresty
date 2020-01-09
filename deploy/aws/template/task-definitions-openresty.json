@@ -20,10 +20,6 @@
             {
                 "containerPath": "/var/log/nginx",
                 "sourceVolume": "logs"
-            },
-            {
-                "containerPath": "/etc/resty-auto-ssl",
-                "sourceVolume": "certs"
             }
         ]
     }
