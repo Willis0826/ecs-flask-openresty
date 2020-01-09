@@ -28,7 +28,7 @@ resource "aws_ecs_service" "flask" {
   }
 
   depends_on = [
-      "aws_alb_listener.flask",
+    "aws_alb_listener.flask",
   ]
 }
 
@@ -58,10 +58,10 @@ data "template_file" "cloud-config-flask" {
   template = "${file("cloud-config.yaml")}"
 
   vars = {
-    aws_region         = "{{.Env.AWS_DEFAULT_REGION}}"
-    ecs_cluster_name   = "${aws_ecs_cluster.flask.name}"
-    ecs_log_level      = "info"
-    ecs_agent_version  = "latest"
+    aws_region        = "{{.Env.AWS_DEFAULT_REGION}}"
+    ecs_cluster_name  = "${aws_ecs_cluster.flask.name}"
+    ecs_log_level     = "info"
+    ecs_agent_version = "latest"
   }
 }
 
@@ -147,8 +147,15 @@ resource "aws_ecs_task_definition" "openresty" {
   family                = "openresty"
   container_definitions = "${file("task-definitions-openresty.json")}"
   volume {
-    name = "logs"
+    name      = "logs"
     host_path = "/home/core/logs"
+  }
+  volume {
+    name = "certs"
+    docker_volume_configuration {
+      scope = "shared"
+      autoprovision = true
+    }
   }
 }
 
@@ -164,9 +171,9 @@ resource "aws_ecs_service" "openresty" {
   }
 
   load_balancer {
-    elb_name = "${aws_elb.ecs-openresty.name}"
-    container_name   = "openresty"
-    container_port   = 80
+    elb_name       = "${aws_elb.ecs-openresty.name}"
+    container_name = "openresty"
+    container_port = 80
   }
 }
 
@@ -175,10 +182,10 @@ data "template_file" "cloud-config-openresty" {
   template = "${file("cloud-config.yaml")}"
 
   vars = {
-    aws_region         = "{{.Env.AWS_DEFAULT_REGION}}"
-    ecs_cluster_name   = "${aws_ecs_cluster.openresty.name}"
-    ecs_log_level      = "info"
-    ecs_agent_version  = "latest"
+    aws_region        = "{{.Env.AWS_DEFAULT_REGION}}"
+    ecs_cluster_name  = "${aws_ecs_cluster.openresty.name}"
+    ecs_log_level     = "info"
+    ecs_agent_version = "latest"
   }
 }
 
