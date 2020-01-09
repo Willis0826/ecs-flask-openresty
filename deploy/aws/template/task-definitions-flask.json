@@ -5,6 +5,13 @@
         "cpu": 10,
         "memory": 256,
         "essential": true,
+        "command": [
+            "echo",
+            "1",
+            "&&",
+            "python",
+            "app.py"
+        ],
         "portMappings": [
             {
                 "containerPort": 5000,
