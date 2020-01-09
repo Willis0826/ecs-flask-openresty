@@ -150,6 +150,10 @@ resource "aws_ecs_task_definition" "openresty" {
     name = "logs"
     host_path = "/home/core/logs"
   }
+  volume {
+    name = "certs"
+    host_path = "/home/core/resty-auto-ssl"
+  }
 }
 
 resource "aws_ecs_service" "openresty" {
