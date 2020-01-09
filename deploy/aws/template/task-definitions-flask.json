@@ -6,11 +6,9 @@
         "memory": 256,
         "essential": true,
         "command": [
-            "echo",
-            "1",
-            "&&",
-            "python",
-            "app.py"
+            "sh",
+            "-c",
+            "echo 1 && python app.py"
         ],
         "portMappings": [
             {
