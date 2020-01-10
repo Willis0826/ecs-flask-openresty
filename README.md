@@ -31,6 +31,9 @@ There are resources needed to be manually create after ran CI/CD.
 1. DNS domain `willischou.com` and setup DNS Server to created Route53
 
 ## Architecture
+
+The architecture is deployed with Terraform. The diagram is generate with [PlantUML](https://plantuml.com/) and [C4 Model Extension](https://github.com/RicardoNiepel/C4-PlantUML)
+
 ```plantuml
 @startuml architecture-component
 !includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Container.puml
@@ -44,9 +47,10 @@ Boundary(ecs_openresty, "ECS Openresty") {
     Container(openresty_elb, "ELB Openresty", "Service")
     Boundary(asg_openresty, "ASG Openresty") {
         Container(openresty_instance_1, "EC2 Openresty", "Instance")
+        Container(openresty_instance_2, "EC2 Openresty", "Instance")
     }
-
-    Rel(openresty_elb, openresty_instance_1, "Route to", "HTTP:80")
+    Rel(openresty_elb, openresty_instance_1, "Route to", "HTTP:80/HTTP:443")
+    Rel(openresty_elb, openresty_instance_2, "Route to", "HTTP:80/HTTP:443")
 }
 Boundary(ecs_flask, "ECS Flask") {
     Container(flask_alb, "ALB Flask", "Service")
@@ -59,6 +63,8 @@ Rel(person, openresty_elb, "Access", "HTTP:443/HTTP:80")
 Rel(person, route53, "DNS resolve", "TCP:53/UDP:53")
 Rel(openresty_instance_1, flask_alb, "Route to", "HTTP:5000")
 Rel(openresty_instance_1, lets_encrypt, "Ask certificate", "HTTP:443")
+Rel(openresty_instance_2, flask_alb, "Route to", "HTTP:5000")
+Rel(openresty_instance_2, lets_encrypt, "Ask certificate", "HTTP:443")
 
 
 @enduml
