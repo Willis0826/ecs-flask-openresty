@@ -1,5 +1,6 @@
 # binary
 main-gen
+*.zip
 # sam local invoke
 template.yaml
 debug.sns.json
