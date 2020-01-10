@@ -32,7 +32,7 @@ There are resources needed to be manually create after ran CI/CD.
 
 ## Architecture
 
-The architecture is deployed with Terraform. The diagram is generate with [PlantUML](https://plantuml.com/) and [C4 Model Extension](https://github.com/RicardoNiepel/C4-PlantUML)
+The diagram is generated with [PlantUML](https://plantuml.com/) and [C4 Model Extension](https://github.com/RicardoNiepel/C4-PlantUML)
 
 ```plantuml
 @startuml architecture-component

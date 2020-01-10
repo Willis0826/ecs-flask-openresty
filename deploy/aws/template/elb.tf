@@ -1,8 +1,8 @@
 # elb for openresty
 resource "aws_elb" "ecs-openresty" {
   name               = "ecs-openresty"
-  subnets         = ["${data.aws_subnet.us-east-2a.id}", "${data.aws_subnet.us-east-2b.id}"]
-  security_groups = ["${aws_security_group.openresty-elb-sg.id}"]
+  subnets         = [data.aws_subnet.us-east-2a.id, data.aws_subnet.us-east-2b.id]
+  security_groups = [aws_security_group.openresty-elb-sg.id]
 
   listener {
     instance_port     = 80

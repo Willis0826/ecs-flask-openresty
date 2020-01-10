@@ -4,19 +4,19 @@ data "aws_vpc" "default" {
 }
 
 data "aws_subnet" "us-east-2a" {
-  vpc_id = "${data.aws_vpc.default.id}"
+  vpc_id = data.aws_vpc.default.id
   id = "subnet-a0f203c9"
 }
 
 data "aws_subnet" "us-east-2b" {
-  vpc_id = "${data.aws_vpc.default.id}"
+  vpc_id = data.aws_vpc.default.id
   id = "subnet-aa858dd2"
 }
 
 resource "aws_security_group" "flask-alb-sg" {
   description = "controls access to the ALB"
 
-  vpc_id = "${data.aws_vpc.default.id}"
+  vpc_id = data.aws_vpc.default.id
   name   = "flask-alb-sg"
 
   ingress {
@@ -40,7 +40,7 @@ resource "aws_security_group" "flask-alb-sg" {
 resource "aws_security_group" "openresty-elb-sg" {
   description = "controls access to the ELB"
 
-  vpc_id = "${data.aws_vpc.default.id}"
+  vpc_id = data.aws_vpc.default.id
   name   = "openresty-elb-sg"
 
   ingress {
@@ -70,7 +70,7 @@ resource "aws_security_group" "openresty-elb-sg" {
 
 resource "aws_security_group" "instance-sg" {
   description = "controls direct access to application instances"
-  vpc_id      = "${data.aws_vpc.default.id}"
+  vpc_id      = data.aws_vpc.default.id
   name        = "tf-ecs-instsg"
 
   ingress {
@@ -101,7 +101,7 @@ resource "aws_security_group" "instance-sg" {
     to_port   = 5000
 
     security_groups = [
-      "${aws_security_group.flask-alb-sg.id}",
+      aws_security_group.flask-alb-sg.id,
     ]
   }
 
@@ -111,7 +111,7 @@ resource "aws_security_group" "instance-sg" {
     to_port   = 61000
 
     security_groups = [
-      "${aws_security_group.flask-alb-sg.id}",
+      aws_security_group.flask-alb-sg.id,
     ]
   }
 
@@ -125,7 +125,7 @@ resource "aws_security_group" "instance-sg" {
 
 resource "aws_security_group" "openresty-instance-sg" {
   description = "controls direct access to application instances"
-  vpc_id      = "${data.aws_vpc.default.id}"
+  vpc_id      = data.aws_vpc.default.id
   name        = "openresty-tf-ecs-instsg"
 
   ingress {
@@ -145,7 +145,7 @@ resource "aws_security_group" "openresty-instance-sg" {
     to_port   = 80
 
     security_groups = [
-      "${aws_security_group.openresty-elb-sg.id}",
+      aws_security_group.openresty-elb-sg.id,
     ]
   }
 
@@ -155,7 +155,7 @@ resource "aws_security_group" "openresty-instance-sg" {
     to_port   = 443
 
     security_groups = [
-      "${aws_security_group.openresty-elb-sg.id}",
+      aws_security_group.openresty-elb-sg.id,
     ]
   }
 

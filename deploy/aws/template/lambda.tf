@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "lambda-policy" {
 
 resource "aws_iam_role" "iam-for-lambda" {
   name               = "iam-for-lambda"
-  assume_role_policy = "${data.aws_iam_policy_document.lambda-policy.json}"
+  assume_role_policy = data.aws_iam_policy_document.lambda-policy.json
 }
 
 resource "aws_lambda_function" "slack-notification-worker" {
@@ -24,7 +24,7 @@ resource "aws_lambda_function" "slack-notification-worker" {
   s3_bucket = "willis-lambda-assets"
   s3_key = "{{.Env.VERSION}}/slack-notification-worker.zip"
 
-  role    = "${aws_iam_role.iam-for-lambda.arn}"
+  role    = aws_iam_role.iam-for-lambda.arn
   handler = "slack-notification-worker"
   runtime = "go1.x"
   timeout = 30

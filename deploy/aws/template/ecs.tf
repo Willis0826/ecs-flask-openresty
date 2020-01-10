@@ -7,13 +7,13 @@ resource "aws_ecs_cluster" "flask" {
 
 resource "aws_ecs_task_definition" "flask" {
   family                = "flask"
-  container_definitions = "${file("task-definitions-flask.json")}"
+  container_definitions = file("task-definitions-flask.json")
 }
 
 resource "aws_ecs_service" "flask" {
   name            = "flask"
-  cluster         = "${aws_ecs_cluster.flask.id}"
-  task_definition = "${aws_ecs_task_definition.flask.arn}"
+  cluster         = aws_ecs_cluster.flask.id
+  task_definition = aws_ecs_task_definition.flask.arn
   desired_count   = 1
 
   ordered_placement_strategy {
@@ -22,13 +22,13 @@ resource "aws_ecs_service" "flask" {
   }
 
   load_balancer {
-    target_group_arn = "${aws_alb_target_group.ecs-flask.arn}"
+    target_group_arn = aws_alb_target_group.ecs-flask.arn
     container_name   = "flask"
     container_port   = 5000
   }
 
   depends_on = [
-    "aws_alb_listener.flask",
+    aws_alb_listener.flask,
   ]
 }
 
@@ -55,11 +55,11 @@ data "aws_ami" "stable-coreos" {
 }
 
 data "template_file" "cloud-config-flask" {
-  template = "${file("cloud-config.yaml")}"
+  template = file("cloud-config.yaml")
 
   vars = {
     aws_region        = "{{.Env.AWS_DEFAULT_REGION}}"
-    ecs_cluster_name  = "${aws_ecs_cluster.flask.name}"
+    ecs_cluster_name  = aws_ecs_cluster.flask.name
     ecs_log_level     = "info"
     ecs_agent_version = "latest"
   }
@@ -68,7 +68,7 @@ data "template_file" "cloud-config-flask" {
 
 resource "aws_iam_instance_profile" "ecs" {
   name = "ecs-instprofile"
-  role = "${aws_iam_role.ecs-instance.name}"
+  role = aws_iam_role.ecs-instance.name
 }
 
 resource "aws_iam_role" "ecs-instance" {
@@ -93,20 +93,20 @@ EOF
 
 resource "aws_iam_role_policy" "instance" {
   name   = "TfEcsExampleInstanceRole"
-  role   = "${aws_iam_role.ecs-instance.name}"
-  policy = "${file("instance-profile-policy.json")}"
+  role   = aws_iam_role.ecs-instance.name
+  policy = file("instance-profile-policy.json")
 }
 
 resource "aws_launch_configuration" "flask" {
   security_groups = [
-    "${aws_security_group.instance-sg.id}",
+    aws_security_group.instance-sg.id,
   ]
 
   key_name                    = "ecs-flask-cluster" # FIXME using terraform to create key pair
-  image_id                    = "${data.aws_ami.stable-coreos.id}"
+  image_id                    = data.aws_ami.stable-coreos.id
   instance_type               = "t2.small"
-  iam_instance_profile        = "${aws_iam_instance_profile.ecs.name}"
-  user_data                   = "${data.template_file.cloud-config-flask.rendered}"
+  iam_instance_profile        = aws_iam_instance_profile.ecs.name
+  user_data                   = data.template_file.cloud-config-flask.rendered
   associate_public_ip_address = true
 
   lifecycle {
@@ -116,11 +116,11 @@ resource "aws_launch_configuration" "flask" {
 
 resource "aws_autoscaling_group" "flask" {
   name                 = "flask"
-  vpc_zone_identifier  = ["${data.aws_subnet.us-east-2a.id}", "${data.aws_subnet.us-east-2b.id}"]
+  vpc_zone_identifier  = [data.aws_subnet.us-east-2a.id, data.aws_subnet.us-east-2b.id]
   min_size             = 1
   max_size             = 2
   desired_capacity     = 1
-  launch_configuration = "${aws_launch_configuration.flask.name}"
+  launch_configuration = aws_launch_configuration.flask.name
 
   tags = [
     {
@@ -145,7 +145,7 @@ resource "aws_ecs_cluster" "openresty" {
 
 resource "aws_ecs_task_definition" "openresty" {
   family                = "openresty"
-  container_definitions = "${file("task-definitions-openresty.json")}"
+  container_definitions = file("task-definitions-openresty.json")
   volume {
     name      = "logs"
     host_path = "/home/core/logs"
@@ -161,8 +161,8 @@ resource "aws_ecs_task_definition" "openresty" {
 
 resource "aws_ecs_service" "openresty" {
   name            = "openresty"
-  cluster         = "${aws_ecs_cluster.openresty.id}"
-  task_definition = "${aws_ecs_task_definition.openresty.arn}"
+  cluster         = aws_ecs_cluster.openresty.id
+  task_definition = aws_ecs_task_definition.openresty.arn
   desired_count   = 1
 
   ordered_placement_strategy {
@@ -171,7 +171,7 @@ resource "aws_ecs_service" "openresty" {
   }
 
   load_balancer {
-    elb_name       = "${aws_elb.ecs-openresty.name}"
+    elb_name       = aws_elb.ecs-openresty.name
     container_name = "openresty"
     container_port = 80
   }
@@ -179,11 +179,11 @@ resource "aws_ecs_service" "openresty" {
 
 ### compute resources
 data "template_file" "cloud-config-openresty" {
-  template = "${file("cloud-config.yaml")}"
+  template = file("cloud-config.yaml")
 
   vars = {
     aws_region        = "{{.Env.AWS_DEFAULT_REGION}}"
-    ecs_cluster_name  = "${aws_ecs_cluster.openresty.name}"
+    ecs_cluster_name  = aws_ecs_cluster.openresty.name
     ecs_log_level     = "info"
     ecs_agent_version = "latest"
   }
@@ -191,14 +191,14 @@ data "template_file" "cloud-config-openresty" {
 
 resource "aws_launch_configuration" "openresty" {
   security_groups = [
-    "${aws_security_group.openresty-instance-sg.id}",
+    aws_security_group.openresty-instance-sg.id,
   ]
 
   key_name                    = "ecs-openresty-cluster" # FIXME using terraform to create key pair
-  image_id                    = "${data.aws_ami.stable-coreos.id}"
+  image_id                    = data.aws_ami.stable-coreos.id
   instance_type               = "t2.small"
-  iam_instance_profile        = "${aws_iam_instance_profile.ecs.name}"
-  user_data                   = "${data.template_file.cloud-config-openresty.rendered}"
+  iam_instance_profile        = aws_iam_instance_profile.ecs.name
+  user_data                   = data.template_file.cloud-config-openresty.rendered
   associate_public_ip_address = true
 
   lifecycle {
@@ -208,11 +208,11 @@ resource "aws_launch_configuration" "openresty" {
 
 resource "aws_autoscaling_group" "openresty" {
   name                 = "openresty"
-  vpc_zone_identifier  = ["${data.aws_subnet.us-east-2a.id}", "${data.aws_subnet.us-east-2b.id}"]
+  vpc_zone_identifier  = [data.aws_subnet.us-east-2a.id, data.aws_subnet.us-east-2b.id]
   min_size             = 1
   max_size             = 2
   desired_capacity     = 2
-  launch_configuration = "${aws_launch_configuration.openresty.name}"
+  launch_configuration = aws_launch_configuration.openresty.name
 
   tags = [
     {
