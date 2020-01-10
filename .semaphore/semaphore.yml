@@ -41,6 +41,23 @@ blocks:
             - docker tag tmp "${ECR_REGISTRY}/openresty:latest"
             - docker push "${ECR_REGISTRY}/openresty:${SEMAPHORE_GIT_SHA:0:7}"
             - docker push "${ECR_REGISTRY}/openresty:latest"
+  - name: Build and pack lambda
+    task:
+      agent:
+        machine:
+          type: e1-standard-2
+          os_image: ubuntu1804
+      secrets:
+        - name: AWS
+      jobs:
+        - name: slack-notification-worker
+          commands:
+            - checkout
+            - sem-version go 1.13
+            - pip install awscli
+            - cd lambda/slack-notification-worker
+            - GOOS=linux go build -o slack-notification-worker main-gen.go
+            - aws mv slack-notification-worker s3://willis-lambda-assets/${SEMAPHORE_GIT_SHA:0:7}/slack-notification-worker
   - name: Deploy aws resources - dev
     task:
       secrets:

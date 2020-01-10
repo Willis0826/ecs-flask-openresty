@@ -24,7 +24,7 @@ We also need a fallback ssl cert for Openresty using `lua-resty-auto-ssl`. The S
 There are resources needed to be manually create before running CI/CD.
 
 1. ECR `ecs-flask-openresty/flask` and `ecs-flask-openresty/openresty`
-2. S3 `ecs-flask-openresty-tf-states`
+2. S3 `ecs-flask-openresty-tf-states` and `willis-lambda-assets`
 3. EC2 Key Pairs `ecs-flask-cluster` `esc-openresty-cluster`
 
 There are resources needed to be manually create after ran CI/CD.
