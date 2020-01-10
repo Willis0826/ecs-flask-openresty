@@ -58,7 +58,7 @@ blocks:
             - cd lambda/slack-notification-worker
             - GOOS=linux go build -o slack-notification-worker main-gen.go
             - zip slack-notification-worker.zip slack-notification-worker
-            - aws s3 mv slack-notification-worker.zip s3://willis-lambda-assets/${SEMAPHORE_GIT_SHA:0:7}/slack-notification-worker
+            - aws s3 mv slack-notification-worker.zip s3://willis-lambda-assets/${SEMAPHORE_GIT_SHA:0:7}/slack-notification-worker.zip
   - name: Deploy aws resources - dev
     task:
       secrets:
