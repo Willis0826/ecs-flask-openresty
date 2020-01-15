@@ -34,6 +34,8 @@ There are resources needed to be manually create after ran CI/CD.
 
 The diagram is generated with [PlantUML](https://plantuml.com/) and [C4 Model Extension](https://github.com/RicardoNiepel/C4-PlantUML)
 
+![Architecture](https://www.plantuml.com/plantuml/img/fLHBRvj04BxpAxQ-54krmM2daKyXZlEGQ68PVEW9RTQJ67MzeDqbbHNbltTuc60RcbJbmFBu7iDyErmeJQNEjfnGoJQn1gOp2GEMRDD4WD36brWmdgqXavnij4xLrB8a_JryZlKcUymKI9O8ZSWXSgnbpAXS9_SnfC2jsNYmu5JerG_Vai21Ah160nkVHpCaqLY07APeRXY-z_DX5KR-_3gCbdStjw5XB42gH9XfiNmZlHLwzN3r60Ebo1EdwXUXQThh6y5EQTYQ7BIAG32vIpK2VT1V5PcNz-RCwoEozZLbaccOk8XRvbTaukRY0SYNc04YBvDChAdScS1KbAGW92YzGyXy5f27_NslJruDWiUxS8sDW3_cUF-oWJ_mo8cr3rNF1pvUSDFYq-KL2qnIC8X6HOdEeULTzRRo_534-OJ8Mt5U0Z_-uewYoZRh99Uw3SF5zDosYdKyTYl9puav7ukz7SPNx9KgkklykYMs0XFH8Z8F8ojnVuzhhvj7TQZRfdqIKMtHsTb6KIqQ9qrmdUzdvuEpaMtRHHDoYVty76_BSengAlRDgXg9r2RnVL2kxWE24Wb_WPmNpXRJYMkjhlAb8hLdt-pjIT6Jijfkzj5OUpZs3AIEd_1dew7v1TqopdyLuVnZ4OPn0MADFxO_ "Architecture")
+
 ```plantuml
 @startuml architecture-component
 !includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Container.puml
