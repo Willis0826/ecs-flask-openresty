@@ -38,7 +38,7 @@ data "aws_ami" "stable-coreos" {
 
   filter {
     name   = "description"
-    values = ["CoreOS Container Linux stable *"]
+    values = ["CoreOS Container Linux stable 2345.3.0 (HVM)"]
   }
 
   filter {
@@ -51,7 +51,7 @@ data "aws_ami" "stable-coreos" {
     values = ["hvm"]
   }
 
-  owners = ["595879546273"] # CoreOS
+  owners = ["679593333241"] # CoreOS
 }
 
 data "template_file" "cloud-config-flask" {
