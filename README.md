@@ -101,5 +101,13 @@ You will need to transpile YAML formatted Butance config (`deploy/aws/template/c
 docker run -it --rm --volume ${PWD}:/pwd --workdir /pwd quay.io/coreos/butane:release --pretty --strict deploy/aws/template/cloud-config.yaml > deploy/aws/template/transpiled_config.ign
 ```
 
-Please read the fedora docs for more detail:
+Please read the fedora docs for more detail:  
 https://docs.fedoraproject.org/en-US/fedora-coreos/producing-ign/#_configuration_process
+
+## Try it!
+
+After deployed all the resources and point your domain name DNS server to Route53, you can test the application by the `curl`.
+
+```bash
+
+```

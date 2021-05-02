@@ -179,10 +179,7 @@ data "template_file" "cloud-config-openresty" {
   template = file("transpiled_config.ign")
 
   vars = {
-    aws_region        = "{{.Env.AWS_DEFAULT_REGION}}"
     ecs_cluster_name  = aws_ecs_cluster.openresty.name
-    ecs_log_level     = "info"
-    ecs_agent_version = "latest"
   }
 }
 
