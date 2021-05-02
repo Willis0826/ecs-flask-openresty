@@ -109,5 +109,24 @@ https://docs.fedoraproject.org/en-US/fedora-coreos/producing-ign/#_configuration
 After deployed all the resources and point your domain name DNS server to Route53, you can test the application by the `curl`.
 
 ```bash
+curl https://www.willischou.com -v
+```
 
+## Teardown
+
+You can destroy all the resources created by terraform by running the following commands in local.  
+
+requirements:
+1. gomplate https://github.com/hairyhenderson/gomplate
+2. terraform 0.12.18 https://releases.hashicorp.com/terraform/
+
+```bash
+cd deploy/aws
+ALLOW_SSH_IP="" AWS_SUBNET_B_ID="subnet-e9ec6492" AWS_SUBNET_A_ID="subnet-5664293f" AWS_VPC_ID="vpc-2a324d43" ECR_REGISTRY="" TERRAFORM_REMOTE_STATE_S3="ecs-flask-openresty-tf-states" AWS_DEFAULT_REGION="us-east-2" SLACK_INCOMING_WEBHOOK="" DEPLOY_ENV="dev" VERSION="" gomplate --input-dir=template --output-dir=dist -V
+```
+
+```
+cd dist
+AWS_PROFILE="__Your profile name goes here__" terraform init
+AWS_PROFILE="__Your profile name goes here__" terraform destroy
 ```
