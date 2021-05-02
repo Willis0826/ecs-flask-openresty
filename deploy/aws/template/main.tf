@@ -7,7 +7,7 @@ terraform {
 
   backend "s3" {
     region = "{{ .Env.AWS_DEFAULT_REGION }}"
-    bucket = "ecs-flask-openresty-tf-states"
+    bucket = "{{ .Env.TERRAFORM_REMOTE_STATE_S3 }}"
     key    = "{{ .Env.DEPLOY_ENV }}/terraform.tfstate"
   }
 }

@@ -19,4 +19,4 @@ Resources:
       Runtime: go1.x
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          SLACK_INCOMING_WEBHOOK: "https://hooks.slack.com/services/_______" # local
+          SLACK_INCOMING_WEBHOOK: "https://hooks.slack.com/services/________/__________/___________________" # local

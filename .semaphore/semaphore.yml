@@ -12,7 +12,7 @@ blocks:
     task:
       env_vars:
         - name: ECR_REGISTRY
-          value: 990090895087.dkr.ecr.us-east-2.amazonaws.com/ecs-flask-openresty
+          value: 292304604452.dkr.ecr.us-east-2.amazonaws.com/ecs-flask-openresty
       secrets:
         - name: AWS
         - name: SELF_SIGNED_CA
@@ -47,6 +47,9 @@ blocks:
         machine:
           type: e1-standard-2
           os_image: ubuntu1804
+      env_vars:
+        - name: LAMBDA_ASSETS_S3
+          value: s3://willis-lambda-assets
       secrets:
         - name: AWS
       jobs:
@@ -58,7 +61,7 @@ blocks:
             - cd lambda/slack-notification-worker
             - GOOS=linux go build -o slack-notification-worker main-gen.go
             - zip slack-notification-worker.zip slack-notification-worker
-            - aws s3 mv slack-notification-worker.zip s3://willis-lambda-assets/${SEMAPHORE_GIT_SHA:0:7}/slack-notification-worker.zip
+            - aws s3 mv slack-notification-worker.zip $LAMBDA_ASSETS_S3/${SEMAPHORE_GIT_SHA:0:7}/slack-notification-worker.zip
   - name: Deploy aws resources - dev
     task:
       secrets:
@@ -67,6 +70,18 @@ blocks:
       env_vars:
         - name: DEPLOY_ENV
           value: dev
+        - name: TERRAFORM_REMOTE_STATE_S3
+          value: ecs-flask-openresty-tf-states
+        - name: ECR_REGISTRY
+          value: 292304604452.dkr.ecr.us-east-2.amazonaws.com/ecs-flask-openresty
+        - name: AWS_VPC_ID
+          value: vpc-2a324d43
+        - name: AWS_SUBNET_A_ID
+          value: subnet-5664293f
+        - name: AWS_SUBNET_B_ID
+          value: subnet-e9ec6492
+        - name: ALLOW_SSH_IP
+          value: "1.200.8.87"
       jobs:
         - name: "Terraform init and apply"
           commands:

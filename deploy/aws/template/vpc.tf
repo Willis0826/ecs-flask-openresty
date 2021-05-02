@@ -1,16 +1,16 @@
 # default vpc
 data "aws_vpc" "default" {
-  id = "vpc-6423c80d"
+  id = "{{.Env.AWS_VPC_ID}}"
 }
 
 data "aws_subnet" "us-east-2a" {
   vpc_id = data.aws_vpc.default.id
-  id = "subnet-a0f203c9"
+  id = "{{.Env.AWS_SUBNET_A_ID}}"
 }
 
 data "aws_subnet" "us-east-2b" {
   vpc_id = data.aws_vpc.default.id
-  id = "subnet-aa858dd2"
+  id = "{{.Env.AWS_SUBNET_B_ID}}"
 }
 
 resource "aws_security_group" "flask-alb-sg" {
@@ -79,19 +79,7 @@ resource "aws_security_group" "instance-sg" {
     to_port   = 22
 
     cidr_blocks = [
-      "61.219.173.55/32", // office ip
-      "210.242.90.193/32", // office ip
-    ]
-  }
-
-  ingress {
-    protocol  = "tcp"
-    from_port = 5000
-    to_port   = 5000
-
-    cidr_blocks = [
-      "61.219.173.55/32", // office ip
-      "210.242.90.193/32", // office ip
+      "{{.Env.ALLOW_SSH_IP}}"
     ]
   }
 
@@ -134,8 +122,7 @@ resource "aws_security_group" "openresty-instance-sg" {
     to_port   = 22
 
     cidr_blocks = [
-      "61.219.173.55/32", // office ip
-      "210.242.90.193/32", // office ip
+      "{{.Env.ALLOW_SSH_IP}}"
     ]
   }
 
