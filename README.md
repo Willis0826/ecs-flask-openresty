@@ -36,6 +36,7 @@ Pleaes be awared the S3 bucket name is global unique, you may need to create it 
 ![key paris](assets/img/key-paris.png?raw=true)
 4. IAM User with programmatic access
 ![iam](assets/img/iam.png?raw=true)
+(This is for demo propuse, restrict your CI/CD user permission is recommanded)
 
 There are resources needed to be manually create after ran CI/CD.
 1. DNS domain `willischou.com` and setup DNS Server to created Route53
