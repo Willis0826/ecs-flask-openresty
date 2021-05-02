@@ -176,7 +176,7 @@ resource "aws_ecs_service" "openresty" {
 
 ### compute resources
 data "template_file" "cloud-config-openresty" {
-  template = file("cloud-config.yaml")
+  template = file("transpiled_config.ign")
 
   vars = {
     aws_region        = "{{.Env.AWS_DEFAULT_REGION}}"

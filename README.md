@@ -92,3 +92,14 @@ Rel(openresty_instance_2, lets_encrypt, "Ask certificate", "HTTP:443")
 5. Replace the value of `AWS_VPC_ID`, `AWS_SUBNET_A_ID`, `AWS_SUBNET_B_ID` and `ALLOW_SSH_IP` with your own in `.semaphore/semaphore.yml`
 6. Replace domain `willischou.com` with your own in `deploy/aws/template/route53.tf` and `nginx/default.conf`
 7. Commit your changes and let the pipeline build it for you.
+
+## Fedora CoreOs with ECS
+
+You will need to transpile YAML formatted Butance config (`deploy/aws/template/cloud-config.yaml`) into JSON Ignition file (`deploy/aws/template/transpiled_config.ign`) via the following command:
+
+```bash
+docker run -it --rm --volume ${PWD}:/pwd --workdir /pwd quay.io/coreos/butane:release --pretty --strict deploy/aws/template/cloud-config.yaml > deploy/aws/template/transpiled_config.ign
+```
+
+Please read the fedora docs for more detail:
+https://docs.fedoraproject.org/en-US/fedora-coreos/producing-ign/#_configuration_process
