@@ -88,5 +88,6 @@ Rel(openresty_instance_2, lets_encrypt, "Ask certificate", "HTTP:443")
 2. Create secrets at user(or organization or project) level, please refers "Manually create env for CI/CD" section
 3. Create ECR, S3 and EC2 key pairs, please refers "Manually create resource" section
 4. Replace the value of `ECR_REGISTRY`, `LAMBDA_ASSETS_S3` and `TERRAFORM_REMOTE_STATE_S3` in `.semaphore/semaphore.yml`
-5. Replace domain `willischou.com` with your own in `deploy/aws/template/route53.tf` and `nginx/default.conf`
-6. Commit your changes and let the pipeline build it for you.
+5. Replace the value of `AWS_VPC_ID`, `AWS_SUBNET_A_ID`, `AWS_SUBNET_B_ID` and `ALLOW_SSH_IP` with your own in `.semaphore/semaphore.yml`
+6. Replace domain `willischou.com` with your own in `deploy/aws/template/route53.tf` and `nginx/default.conf`
+7. Commit your changes and let the pipeline build it for you.
