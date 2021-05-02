@@ -33,12 +33,12 @@ resource "aws_ecs_service" "flask" {
 }
 
 ### compute resources
-data "aws_ami" "stable-coreos" {
+data "aws_ami" "stable-fedora-coreos" {
   most_recent = true
 
   filter {
     name   = "description"
-    values = ["CoreOS Container Linux stable 2345.3.0 (HVM)"]
+    values = ["Fedora CoreOS next 34.20210427.1.0"]
   }
 
   filter {
@@ -51,7 +51,7 @@ data "aws_ami" "stable-coreos" {
     values = ["hvm"]
   }
 
-  owners = ["679593333241"] # CoreOS
+  owners = ["125523088429"] # fedora-coreos
 }
 
 data "template_file" "cloud-config-flask" {
@@ -103,7 +103,7 @@ resource "aws_launch_configuration" "flask" {
   ]
 
   key_name                    = "ecs-flask-cluster" # FIXME using terraform to create key pair
-  image_id                    = data.aws_ami.stable-coreos.id
+  image_id                    = data.aws_ami.stable-fedora-coreos.id
   instance_type               = "t2.small"
   iam_instance_profile        = aws_iam_instance_profile.ecs.name
   user_data                   = data.template_file.cloud-config-flask.rendered
@@ -195,7 +195,7 @@ resource "aws_launch_configuration" "openresty" {
   ]
 
   key_name                    = "ecs-openresty-cluster" # FIXME using terraform to create key pair
-  image_id                    = data.aws_ami.stable-coreos.id
+  image_id                    = data.aws_ami.stable-fedora-coreos.id
   instance_type               = "t2.small"
   iam_instance_profile        = aws_iam_instance_profile.ecs.name
   user_data                   = data.template_file.cloud-config-openresty.rendered

@@ -1,12 +1,13 @@
 #cloud-config
-coreos:
+variant: fcos
+version: 1.3.0
+systemd:
   units:
     - name: update-engine.service
-      command: stop
+      enabled: false
     - name: amazon-ecs-agent.service
-      command: start
-      runtime: true
-      content: |
+      enabled: true
+      contents: |
         [Unit]
         Description=AWS ECS Agent
         Documentation=https://docs.aws.amazon.com/AmazonECS/latest/developerguide/
