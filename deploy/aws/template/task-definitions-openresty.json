@@ -3,6 +3,7 @@
         "name": "openresty",
         "image": "{{.Env.ECR_REGISTRY}}/openresty:{{.Env.VERSION}}",
         "cpu": 10,
+        "privileged": true,
         "memory": 256,
         "essential": true,
         "portMappings": [
