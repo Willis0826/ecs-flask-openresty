@@ -81,7 +81,7 @@ blocks:
         - name: AWS_SUBNET_B_ID
           value: subnet-e9ec6492
         - name: ALLOW_SSH_IP
-          value: "1.200.8.87"
+          value: "1.200.8.87/32"
       jobs:
         - name: "Terraform init and apply"
           commands:
